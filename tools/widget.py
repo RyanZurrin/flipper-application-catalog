@@ -49,7 +49,7 @@ class Main:
 
     def process(self, args):
         try:
-            with open(f".github/WIDGET_TEMPLATE.md", "r") as reader:
+            with open(".github/WIDGET_TEMPLATE.md", "r") as reader:
                 readme_file_arr = reader.readlines()
                 readme_file_arr.append("\n")
 

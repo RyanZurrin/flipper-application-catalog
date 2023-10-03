@@ -360,21 +360,20 @@ class AppBundler:
             )
         )
 
-        if len(known_ext_apps) == 0:
+        if not known_ext_apps:
             raise BundlerException("No external applications found")
         elif len(known_ext_apps) == 1:
             self._fam_manifest = known_ext_apps[0]
-        else:
-            if app := next(
+        elif app := next(
                 filter(lambda app: app.appid == self._manifest.id, known_ext_apps),
                 None,
             ):
-                self._log.info(f"Selected application {app.name}")
-                self._fam_manifest = app
-            else:
-                raise BundlerException(
-                    f"Multiple external applications found, specify 'id' in the manifest.yml ({[app.appid for app in known_ext_apps]})"
-                )
+            self._log.info(f"Selected application {app.name}")
+            self._fam_manifest = app
+        else:
+            raise BundlerException(
+                f"Multiple external applications found, specify 'id' in the manifest.yml ({[app.appid for app in known_ext_apps]})"
+            )
 
         self._manifest.sync_from(self._fam_manifest)
 
@@ -471,7 +470,7 @@ class AppBundler:
             self.__process_screenshot(self._code_dir / screenshot, new_screenshot_path)
             new_screenshot_paths.append(self._rel_path(new_screenshot_path))
 
-        if len(new_screenshot_paths) == 0:
+        if not new_screenshot_paths:
             raise BundlerException("No screenshots found")
 
         self._manifest.screenshots = new_screenshot_paths
@@ -522,13 +521,13 @@ class AppBundler:
             )
 
         if not self._manifest.changelog:
-            errors.append(f"Changelog is empty")
+            errors.append("Changelog is empty")
 
         if not self._manifest.short_description:
-            errors.append(f"Short description is empty")
+            errors.append("Short description is empty")
 
         if not self._manifest.description:
-            errors.append(f"Description is empty")
+            errors.append("Description is empty")
 
         if errors:
             raise BundlerException("\n".join(errors))
